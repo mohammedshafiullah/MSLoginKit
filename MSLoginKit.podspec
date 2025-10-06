@@ -28,10 +28,10 @@ TODO: Add long description of the pod here.
   s.source           = { :git => 'https://github.com/Uday kumar/MSLoginKit.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
-  s.ios.deployment_target = '10.0'
+  s.ios.deployment_target = '15.6'
 
-  s.source_files = 'MSLoginKit/Classes/**/*'
-  
+ # s.source_files = 'MSLoginKit/Classes/**/*'
+ s.source_files = 'Sources/**/*.{swift}'
   # s.resource_bundles = {
   #   'MSLoginKit' => ['MSLoginKit/Assets/*.png']
   # }
@@ -39,4 +39,8 @@ TODO: Add long description of the pod here.
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'Firebase/Auth'
+  s.dependency 'Firebase/Core'
+  s.dependency  'Firebase/Firestore'
+
 end

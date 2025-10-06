@@ -27,3 +27,11 @@ Uday kumar, ukmsoftware1@gmail.com
 ## License
 
 MSLoginKit is available under the MIT license. See the LICENSE file for more info.
+
+
+## For Firebase integration
+### Setup Instructions
+To use FirebaseLoginKit:
+1. Add `pod 'FirebaseLoginKit'` to your Podfile.
+2. Add your own `GoogleService-Info.plist` from Firebase Console.
+3. Call `FirebaseManager.shared.configure()` in your `App` init.

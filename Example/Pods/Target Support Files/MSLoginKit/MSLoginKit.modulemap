@@ -1,0 +1,6 @@
+framework module MSLoginKit {
+  umbrella header "MSLoginKit-umbrella.h"
+
+  export *
+  module * { export * }
+}

@@ -1,0 +1,33 @@
+{
+  "name": "MSLoginKit",
+  "version": "0.1.0",
+  "summary": "A short description of MSLoginKit.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/Uday kumar/MSLoginKit",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "Uday kumar": "ukmsoftware1@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/Uday kumar/MSLoginKit.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "15.6"
+  },
+  "source_files": "Sources/**/*.{swift}",
+  "dependencies": {
+    "Firebase/Auth": [
+
+    ],
+    "Firebase/Core": [
+
+    ],
+    "Firebase/Firestore": [
+
+    ]
+  }
+}
