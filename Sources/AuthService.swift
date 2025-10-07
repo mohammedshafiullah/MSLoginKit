@@ -59,8 +59,8 @@ public class AuthService: ObservableObject {
       }
 
     // MARK: - Signup
-       public func signup(email: String, password: String, completion: @escaping (Result<User, Error>) -> Void) {
-           Auth.auth().createUser(withEmail: email, password: password) { result, error in
+    public func signup(email: String, password: String,phoneNumber: String, dateOfBirth :Date, completion: @escaping (Result<User, Error>) -> Void) {
+           Auth.auth().createUser(withEmail: email, password: password ) { result, error in
                if let error = error {
                    print("Firebase Auth Error:", error._userInfo ?? error.localizedDescription ?? "Unknown")
                    completion(.failure(error))
@@ -73,6 +73,8 @@ public class AuthService: ObservableObject {
                let userData: [String: Any] = [
                    "uid": firebaseUser.uid,
                    "email": email,
+                   "phone": phoneNumber,
+                   "dateOfBirth": Timestamp(date: dateOfBirth),
                    "createdAt": Timestamp(date: Date())
                ]
                self.db.collection("users").document(firebaseUser.uid).setData(userData) { err in
