@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.udaykumar.scorebat</string>
+	<string>com.mohdShafiullah.GeneralUsage</string>
 	<key>PROJECT_ID</key>
 	<string>msloginkit</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:73377343143:ios:9b9d6e4404dc630b241d82</string>
+	<string>1:73377343143:ios:09ef5932844f6e48241d82</string>
 </dict>
 </plist>

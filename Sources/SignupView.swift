@@ -16,11 +16,15 @@ public struct SignupView: View {
     @State private var dateOfBirth = Date()
     @State private var showDatePicker = false
     @State private var dateOfBirthSet = false
+    @State private var showInvalidEmailAlert = false
 
     public init(isSignedUp: Binding<Bool>) {
         self._isSignedUp = isSignedUp
     }
-    
+    @FocusState private var focusedField: Field?
+    enum Field {
+        case phone, email, password
+    }
     public var body: some View {
         ZStack {
             // 🌈 Gradient background
@@ -52,6 +56,15 @@ public struct SignupView: View {
                     .keyboardType(.emailAddress)
                     .autocapitalization(.none)
                     .modifier(CustomInputStyle())
+                    .onSubmit {
+                            validateEmail()
+                        }
+                        .onChange(of: email) { _ in
+                            // Optional live validation (if you want)
+                            if !email.isEmpty && !isValidEmail {
+                                // You can show inline hints instead of alerts here if preferred
+                            }
+                        }
 
                 HStack {
                     Text("Password")
@@ -93,7 +106,6 @@ public struct SignupView: View {
                                 }
                             }
                         }
-
                     VStack(alignment: .leading, spacing: 0) {
                         if dateOfBirthSet {
                             Text("")
@@ -176,6 +188,11 @@ public struct SignupView: View {
                         .shadow(color: .black.opacity(0.3), radius: 3, x: 0, y: 2)
                 }
             }
+            .alert("Invalid Email", isPresented: $showInvalidEmailAlert) {
+                Button("OK", role: .cancel) { }
+            } message: {
+                Text("Please enter a valid email address before continuing.")
+            }
             .padding(.horizontal, 30)
             .padding(.vertical, 40)
         }
@@ -186,6 +203,7 @@ public struct SignupView: View {
         formatter.dateStyle = .medium
         return formatter.string(from: dateOfBirth)
     }
+    
 
     private func signUp() {
         guard password == confirmPassword else {
@@ -206,6 +224,17 @@ public struct SignupView: View {
             case .failure(let error):
                 errorMessage = error.localizedDescription
             }
+        }
+    }
+    
+    private var isValidEmail: Bool {
+        let emailRegex = #"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.com$"#
+        return email.range(of: emailRegex, options: .regularExpression) != nil
+    }
+    private func validateEmail() {
+        guard !email.isEmpty else { return }
+        if !isValidEmail {
+            showInvalidEmailAlert = true
         }
     }
 }

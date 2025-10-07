@@ -12,8 +12,7 @@
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		8255398CE223EE14F9FCCF61 /* Pods_MSLoginKit_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04AF0FD8C1F6FF8FFFAECD51 /* Pods_MSLoginKit_Tests.framework */; };
 		B200FD232E92928400B45701 /* ExampleApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B200FD222E92928400B45701 /* ExampleApp.swift */; };
-		B200FD2A2E92E9C300B45701 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B200FD292E92E9C300B45701 /* GoogleService-Info.plist */; };
-		B200FD362E9464DE00B45701 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B200FD292E92E9C300B45701 /* GoogleService-Info.plist */; };
+		B26896C62E95B6B20090A47D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B26896C52E95B6B20090A47D /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +36,7 @@
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
 		7851945F79F6BB6D4F8CF768 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		B200FD222E92928400B45701 /* ExampleApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExampleApp.swift; sourceTree = SOURCE_ROOT; };
-		B200FD292E92E9C300B45701 /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B26896C52E95B6B20090A47D /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		B4C27EC3C6955CB328EC1570 /* Pods-MSLoginKit_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSLoginKit_Example.debug.xcconfig"; path = "Target Support Files/Pods-MSLoginKit_Example/Pods-MSLoginKit_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		B7D14F1B1BD0214A3FE041A9 /* Pods-MSLoginKit_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MSLoginKit_Tests.release.xcconfig"; path = "Target Support Files/Pods-MSLoginKit_Tests/Pods-MSLoginKit_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		BD60C235A6695C26EA073F9A /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
@@ -99,7 +98,7 @@
 		607FACD21AFB9204008FA782 /* Example for MSLoginKit */ = {
 			isa = PBXGroup;
 			children = (
-				B200FD292E92E9C300B45701 /* GoogleService-Info.plist */,
+				B26896C52E95B6B20090A47D /* GoogleService-Info.plist */,
 				B200FD222E92928400B45701 /* ExampleApp.swift */,
 				607FACDC1AFB9204008FA782 /* Images.xcassets */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
@@ -207,7 +206,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
-						DevelopmentTeam = F5623HX37G;
+						DevelopmentTeam = MT423KU665;
 						LastSwiftMigration = 0900;
 					};
 					607FACE41AFB9204008FA782 = {
@@ -244,7 +243,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
-				B200FD2A2E92E9C300B45701 /* GoogleService-Info.plist in Resources */,
+				B26896C62E95B6B20090A47D /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -252,7 +251,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B200FD362E9464DE00B45701 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -494,12 +492,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B4C27EC3C6955CB328EC1570 /* Pods-MSLoginKit_Example.debug.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = F5623HX37G;
+				DEVELOPMENT_TEAM = MT423KU665;
 				INFOPLIST_FILE = MSLoginKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = com.udaykumar.scorebat;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mohdShafiullah.GeneralUsage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
@@ -510,12 +508,12 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C48A7C1EE51A447EF2E409E5 /* Pods-MSLoginKit_Example.release.xcconfig */;
 			buildSettings = {
-				DEVELOPMENT_TEAM = F5623HX37G;
+				DEVELOPMENT_TEAM = MT423KU665;
 				INFOPLIST_FILE = MSLoginKit/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.6;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MODULE_NAME = ExampleApp;
-				PRODUCT_BUNDLE_IDENTIFIER = com.udaykumar.scorebat;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mohdShafiullah.GeneralUsage;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
