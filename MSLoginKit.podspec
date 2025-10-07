@@ -21,11 +21,14 @@ Pod::Spec.new do |s|
 TODO: Add long description of the pod here.
                        DESC
 
-  s.homepage         = 'https://github.com/Uday kumar/MSLoginKit'
+  s.homepage         = 'https://github.com/mohammedshafiullah/MSLoginKit'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'Uday kumar' => 'ukmsoftware1@gmail.com' }
-  s.source           = { :git => 'https://github.com/Uday kumar/MSLoginKit.git', :tag => s.version.to_s }
+# s.author           = { 'Uday kumar' => 'ukmsoftware1@gmail.com' }
+  s.author           = { 'mohammedshafiullah' => 'mdshfiphonedev@gmail.com' }
+# s.source           = { :git => 'https://github.com/Uday kumar/MSLoginKit.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/mohammedshafiullah/MSLoginKit.git', :tag => s.version.to_s }
+  
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '15.6'
