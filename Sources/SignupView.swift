@@ -227,6 +227,8 @@ public struct SignupView: View {
         }
     }
     
+    
+    
     private var isValidEmail: Bool {
         let emailRegex = #"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.com$"#
         return email.range(of: emailRegex, options: .regularExpression) != nil
