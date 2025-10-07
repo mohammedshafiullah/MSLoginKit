@@ -9,6 +9,7 @@
 import SwiftUI
 import MSLoginKit
 
+// So far the code authentication
 @main
 struct ExampleApp: App {
     @State private var isLoggedIn = false
