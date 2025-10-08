@@ -11,8 +11,10 @@ public struct SignupView: View {
     @State private var showDatePicker = false
     @State private var dateOfBirthSet = false
     @State private var showInvalidEmailAlert = false
-    @State private var showAlert: Bool = false
+    @State private var showInvalidPasswordAlert: Bool = false
+    @State private var showInvalidPhoneNumberAlert: Bool = false
     @State private var alertMessage: String = ""
+    @State private var signUpAlertMessage: Bool = false
 
     @FocusState private var focusedField: Field?
 
@@ -59,7 +61,11 @@ public struct SignupView: View {
                             validateEmail()
                         }
                 }
-
+                .alert("Invalid Email", isPresented: $showInvalidEmailAlert) {
+                    Button("OK", role: .cancel) { }
+                } message: {
+                    Text("Please enter a valid email address before continuing.")
+                }
                 // MARK: 🔐 PASSWORD
                 VStack(spacing: 16) {
                     HStack {
@@ -87,14 +93,14 @@ public struct SignupView: View {
                                        .modifier(CustomInputStyle())
                                        .focused($focusedField, equals: .confirmPassword)
                                         .onSubmit {
-                                        validatePassword()
+                                            validatePassword()
                                         }
                                       }
                                         .padding()
                                         .background(Color.white.opacity(0.15))
                                         .cornerRadius(15)
                                         .shadow(color: .black.opacity(0.25), radius: 8, x: 0, y: 3)
-                .alert(isPresented: $showAlert) {
+                .alert(isPresented: $showInvalidPasswordAlert) {
                     Alert(title: Text("Password Validation"),
                           message: Text(alertMessage),
                           dismissButton: .default(Text("OK")))
@@ -105,8 +111,10 @@ public struct SignupView: View {
                     .keyboardType(.phonePad)
                     .modifier(CustomInputStyle())
                     .focused($focusedField, equals: .phone)
-
-                VStack(alignment: .leading, spacing: 0) {
+                    .onSubmit {
+                        validatePhoneNumber()
+                    }
+                    VStack(alignment: .leading, spacing: 0) {
                     Button(action: {
                         showDatePicker.toggle()
                     }) {
@@ -158,6 +166,11 @@ public struct SignupView: View {
 
                 Button("Sign Up") {
                     signUp()
+                        
+                }  .alert(isPresented: $signUpAlertMessage) {
+                    Alert(title: Text("Status"),
+                          message: Text(errorMessage),
+                          dismissButton: .default(Text("OK")))
                 }
                 .padding()
                 .frame(maxWidth: .infinity)
@@ -167,11 +180,6 @@ public struct SignupView: View {
                 .shadow(color: .black.opacity(0.3), radius: 6, x: 0, y: 3)
                 
             }
-            .alert("Invalid Email", isPresented: $showInvalidEmailAlert) {
-                Button("OK", role: .cancel) { }
-            } message: {
-                Text("Please enter a valid email address before continuing.")
-            }
             .padding()
             // 👇 Toolbar is conditionally shown only when phone field is active
             .toolbar {
@@ -180,11 +188,11 @@ public struct SignupView: View {
                     if focusedField == .phone {
                         Button("Done") {
                             focusedField = nil
+                            validatePhoneNumber()
                         }
                     }
                 }
             }
-            
         }
     }
     // MARK: - Custom Input Field Modifier
@@ -199,10 +207,34 @@ public struct SignupView: View {
     }
     
     private func signUp() {
-          guard password == confirmPassword else {
-              errorMessage = "Passwords do not match"
-              return
-          }
+        guard password == confirmPassword, showInvalidEmailAlert == false , showInvalidPasswordAlert == false ,showInvalidPhoneNumberAlert == false else {
+            // Check which condition failed (optional)
+            if password != confirmPassword {
+                if !errorMessage.contains("Passwords do not match") {
+                    errorMessage += "\nPasswords do not match"
+                }
+                signUpAlertMessage = true
+            }
+            if showInvalidEmailAlert {
+                if !errorMessage.contains("Email is invalid") {
+                    errorMessage += "\nEmail is invalid"
+                }
+                signUpAlertMessage = true
+            }
+            if showInvalidPasswordAlert {
+                if !errorMessage.contains("Password is invalid") {
+                    errorMessage += "\nPassword is invalid"
+                }
+                signUpAlertMessage = true
+            }
+            if showInvalidPhoneNumberAlert {
+                if !errorMessage.contains("Phone number is invalid") {
+                    errorMessage += "\nPhone number is invalid"
+                }
+                signUpAlertMessage = true
+            }
+            return
+        }
 
           AuthService.shared.signup(
               email: email,
@@ -212,13 +244,25 @@ public struct SignupView: View {
           ) { result in
               switch result {
               case .success:
-                  errorMessage = ""
-                  isSignedUp = true
+                  AfterAccountSuccessfullyCreation()
               case .failure(let error):
                   errorMessage = error.localizedDescription
               }
           }
       }
+    
+    private func  AfterAccountSuccessfullyCreation() {
+        errorMessage = ""
+        errorMessage = "Account created successfully!"
+        isSignedUp = true
+        signUpAlertMessage = true
+        email = ""
+        password = ""
+        confirmPassword = ""
+        phoneNumber = ""
+        dateOfBirth = Date()
+    }
+    
     private var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -240,16 +284,19 @@ public struct SignupView: View {
     }
 
     private func validatePassword() {
-        let regex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>_\\-]).{8,}$"
-        let predicate = NSPredicate(format: "SELF MATCHES %@", regex)
-
-        if password.isEmpty || confirmPassword.isEmpty {
+        // Check for empty fields
+        guard !password.isEmpty && !confirmPassword.isEmpty else {
             alertMessage = "Password fields cannot be empty."
-            showAlert = true
+            showInvalidPasswordAlert = true
             return
         }
 
-        if !predicate.evaluate(with: password) {
+        // Regex for industry-standard password rules
+        let regex = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[!@#$%^&*(),.?\":{}|<>_\\-]).{8,}$"
+        let predicate = NSPredicate(format: "SELF MATCHES %@", regex)
+
+        // Validate password complexity
+        guard predicate.evaluate(with: password) else {
             alertMessage = """
             Password must:
             • Be at least 8 characters
@@ -258,19 +305,36 @@ public struct SignupView: View {
             • Contain 1 number
             • Contain 1 special character
             """
-            showAlert = true
+            showInvalidPasswordAlert = true
             return
         }
 
-        if password != confirmPassword {
+        // Check if password and confirm password match
+        guard password == confirmPassword else {
             alertMessage = "Passwords do not match."
-            showAlert = true
+            showInvalidPasswordAlert = true
             return
         }
-
-        alertMessage = "Password is valid ✅"
-        showAlert = true
     }
+    
+    private func validatePhoneNumber() {
+        // Remove spaces or special characters
+        let trimmedPhone = phoneNumber.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Regex: 10 digits only
+        let phoneRegex = "^[6-9]\\d{9}$"
+        let predicate = NSPredicate(format: "SELF MATCHES %@", phoneRegex)
+        
+        guard predicate.evaluate(with: trimmedPhone) else {
+            errorMessage = "Please enter a valid 10-digit phone number."
+            showInvalidPhoneNumberAlert = true
+            return
+        }
+        
+        // ✅ Phone number is valid
+        errorMessage = "" // clear any previous error
+    }
+
 }
 
 
