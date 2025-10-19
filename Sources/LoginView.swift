@@ -55,7 +55,7 @@ public struct LoginView: View {
             Button("Don't have an account? Sign Up") {
                 showSignup = true
             }
-            .foregroundColor(.gray)
+            .foregroundColor(.white)
         }
         .padding()
         .sheet(isPresented: $showSignup) {
