@@ -11,6 +11,8 @@ import FirebaseCore
 import Combine
 import FirebaseFirestore
 
+
+
 public class AuthService: ObservableObject {
     public static let shared = AuthService()
     private let db = Firestore.firestore()
