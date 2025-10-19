@@ -15,7 +15,6 @@ public struct SignupView: View {
     @State private var showInvalidPhoneNumberAlert: Bool = false
     @State private var alertMessage: String = ""
     @State private var signUpAlertMessage: Bool = false
-
     @FocusState private var focusedField: Field?
 
     enum Field {
@@ -167,11 +166,10 @@ public struct SignupView: View {
                 Button("Sign Up") {
                     signUp()
                         
-                }  .alert(isPresented: $signUpAlertMessage) {
-                    Alert(title: Text("Status"),
-                          message: Text(errorMessage),
-                          dismissButton: .default(Text("OK")))
                 }
+                .alert("Success", isPresented: $signUpAlertMessage, actions: { Button("OK") { }},
+               message: { Text("Your account has been created successfully.") })
+                
                 .padding()
                 .frame(maxWidth: .infinity)
                 .background(LinearGradient(colors: [.green.opacity(0.9), .mint.opacity(0.9)], startPoint: .leading, endPoint: .trailing))
@@ -195,6 +193,8 @@ public struct SignupView: View {
             }
         }
     }
+
+    
     // MARK: - Custom Input Field Modifier
     struct CustomInputStyle: ViewModifier {
         func body(content: Content) -> some View {
@@ -236,23 +236,26 @@ public struct SignupView: View {
             return
         }
 
-          AuthService.shared.signup(
-              email: email,
-              password: password,
-              phoneNumber: phoneNumber,
-              dateOfBirth: dateOfBirth
-          ) { result in
-              switch result {
-              case .success:
-                  AfterAccountSuccessfullyCreation()
-              case .failure(let error):
-                  errorMessage = error.localizedDescription
-              }
-          }
+        AuthService.shared.signup(
+            email: email,
+            password: password,
+            phoneNumber: phoneNumber,
+            dateOfBirth: dateOfBirth
+        ) { result in
+            DispatchQueue.main.async { // Ensure UI updates on main thread
+                switch result {
+                case .success(let user): // <- capture the FirebaseAuth.User
+                    print("User created:", user.uid)
+                    AfterAccountSuccessfullyCreation()
+                case .failure(let error):
+                    errorMessage = error.localizedDescription
+                    signUpAlertMessage = true
+                }
+            }
+        }
       }
     
     private func  AfterAccountSuccessfullyCreation() {
-        errorMessage = ""
         errorMessage = "Account created successfully!"
         isSignedUp = true
         signUpAlertMessage = true
@@ -268,8 +271,6 @@ public struct SignupView: View {
         formatter.dateStyle = .medium
         return formatter.string(from: dateOfBirth)
     }
-
- 
 
     private var isValidEmail: Bool {
         let emailRegex = #"^[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\.com$"#

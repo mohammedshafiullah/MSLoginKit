@@ -12,27 +12,26 @@ import MSLoginKit
 // So far the code authentication
 @main
 struct ExampleApp: App {
-    @State private var isLoggedIn = false
+    @State private var isLoggedInLocal = false
 
     init() {
         FirebaseManager.shared.configure()
-        
     }
 
     var body: some Scene {
         WindowGroup {
-            if isLoggedIn {
+            if isLoggedInLocal {
                 VStack(spacing: 20) {
                     Text("🎉 Welcome!")
                         .font(.title)
                     Button("Logout") {
                         AuthService.shared.logout()
-                        isLoggedIn = false
+                        isLoggedInLocal = false
                     }
                     .foregroundColor(.red)
                 }
             } else {
-                LoginView(isLoggedIn: $isLoggedIn)
+                LoginView(isLoggedIn: $isLoggedInLocal)
             }
         }
     }

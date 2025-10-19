@@ -12,11 +12,13 @@ import Combine
 import FirebaseFirestore
 
 public class AuthService: ObservableObject {
-    public static let shared = AuthService()
-    private let db = Firestore.firestore()
-    
     @Published public var user: User?
     @Published public var errorMessage: String?
+    @Published var isAuthenticated = false
+
+    public static var shared = AuthService()
+    private var authStateListenerHandle: AuthStateDidChangeListenerHandle?
+    private let db = Firestore.firestore()
 
     private init() {
         // ✅ Ensure Firebase is configured before using Auth
@@ -25,8 +27,9 @@ public class AuthService: ObservableObject {
         }
 
         // Keep track of auth state changes
-        Auth.auth().addStateDidChangeListener { [weak self] _, user in
+        authStateListenerHandle = Auth.auth().addStateDidChangeListener { [weak self] _, user in
             DispatchQueue.main.async {
+                AuthService.shared.isAuthenticated = (user != nil)
                 self?.user = user
             }
         }
@@ -59,33 +62,58 @@ public class AuthService: ObservableObject {
       }
 
     // MARK: - Signup
-    public func signup(email: String, password: String,phoneNumber: String, dateOfBirth :Date, completion: @escaping (Result<User, Error>) -> Void) {
-           Auth.auth().createUser(withEmail: email, password: password ) { result, error in
-               if let error = error {
-                   print("Firebase Auth Error:", error._userInfo ?? error.localizedDescription ?? "Unknown")
-                   completion(.failure(error))
-                   return
-               }
+    public func signup(
+        email: String,
+        password: String,
+        phoneNumber: String,
+        dateOfBirth: Date,
+        completion: @escaping (Result<FirebaseAuth.User, Error>) -> Void
+    ) {
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] result, error in
+            print("createUser result:", result ?? "Nil data")
+            print("createUser error:", error ?? "No Error")
+            if let error = error {
+                DispatchQueue.main.async {
+                    print("❌ Firebase Auth Error:", error.localizedDescription)
+                    completion(.failure(error))
+                }
+                return
+            }
 
-               guard let firebaseUser = result?.user else { return }
+            guard let firebaseUser = result?.user else {
+                let customError = NSError(domain: "", code: -1, userInfo: [NSLocalizedDescriptionKey: "Firebase user not found"])
+                DispatchQueue.main.async {
+                    completion(.failure(customError))
+                }
+                return
+            }
 
-               // ✅ Create user document in Firestore
-               let userData: [String: Any] = [
-                   "uid": firebaseUser.uid,
-                   "email": email,
-                   "phone": phoneNumber,
-                   "dateOfBirth": Timestamp(date: dateOfBirth),
-                   "createdAt": Timestamp(date: Date())
-               ]
-               self.db.collection("users").document(firebaseUser.uid).setData(userData) { err in
-                   if let err = err {
-                       completion(.failure(err))
-                   } else {
-                       completion(.success(firebaseUser))
-                   }
-               }
-           }
-       }
+            let userData: [String: Any] = [
+                "uid": firebaseUser.uid,
+                "email": email,
+                "phone": phoneNumber,
+                "dateOfBirth": Timestamp(date: dateOfBirth),
+                "createdAt": Timestamp(date: Date())
+            ]
+
+            let dbs = Firestore.firestore()
+            dbs.collection("users").document(firebaseUser.uid).setData(userData) { err in
+                print("🟡 Firebase Auth created user: \(String(describing: result?.user.uid))")
+                if let err = err {
+                    print("❌ Firestore error:", err)
+                    completion(.failure(err))
+                } else {
+                    DispatchQueue.main.async {
+                        print("✅ Firestore write success for user:", firebaseUser.uid)
+                        // Update local user state safely
+                        self?.user = firebaseUser
+                        AuthService.shared.isAuthenticated  = true
+                        completion(.success(firebaseUser))
+                    }
+                }
+            }
+        }
+    }
 
   
 }
