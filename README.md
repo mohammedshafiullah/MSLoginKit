@@ -22,7 +22,7 @@ pod 'MSLoginKit'
 
 ## Author
 
-Mohammed Shafiullah, mdshfiphonedev@gmail.com
+Mohammed Shafiullah   mdshfiphonedev@gmail.com
 
 ## License
 
